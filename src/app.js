@@ -1,14 +1,13 @@
 const express = require('express');
 
+const authRouter = require('./routes/auth');
 const connectDB = require('./config/database');
 
 const app = express();
 
 app.use(express.json());
 
-const authRouter = require('./routes/auth');
-
-app.use("/", authRouter);
+app.use("/auth", authRouter);
 
 connectDB().then(() => {
     console.log("Database connected successfully!");
