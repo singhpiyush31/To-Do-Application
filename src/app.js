@@ -4,6 +4,12 @@ const connectDB = require('./config/database');
 
 const app = express();
 
+app.use(express.json());
+
+const authRouter = require('./routes/auth');
+
+app.use("/", authRouter);
+
 connectDB().then(() => {
     console.log("Database connected successfully!");
     app.listen(7777 , () => {
