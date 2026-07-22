@@ -1,21 +1,18 @@
 const express = require('express');
 const bcrypt = require("bcrypt");
-
-const authRouter = express.Router();
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-
+const authRouter = express.Router();
 
 authRouter.post("/signup", async (req,res) => {
     try {
-
-
-        const { Name, emailID, password } = req.body;
+        const { name, email, password } = req.body;
         const passwordHash = await bcrypt.hash(password, 10);
 
         const user = new User({
-            Name, emailID, password: passwordHash,
+            name, email, password: passwordHash,
         });
         await user.save();
         res.send("User Added Successfully!");
@@ -27,20 +24,19 @@ authRouter.post("/signup", async (req,res) => {
 
 authRouter.post("/login", async (req,res) => {
     try {
-        const { emailID, password } = req.body;
-        const user = await User.findOne({ emailID: emailID });
-
+        const { email, password } = req.body;
+        const user = await User.findOne({ email: email });
+        console.log(user);
+        
         if(!user) {
             throw new Error("Invalid Credentials");
         }
-
-        const isPasswordValid = await user.validatePassword(password);
+    
+        const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if(isPasswordValid) {
-            const token = await user.getJWT();
-            res.cookie("token", token, {
-                
-            });
+            const token = await jwt.sign({ _id: user._id }, "To-Do@989", { expiresIn: "7d" });
+            res.cookie("token", token, { expires: new Date(Date.now()) + 24*60*60*1000*7 });
             res.send("Login Successfull!");
         }
         else {
