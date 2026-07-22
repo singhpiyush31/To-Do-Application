@@ -4,13 +4,12 @@ const bcrypt = require("bcrypt");
 const authRouter = express.Router();
 
 const User = require('../models/user');
-const { validateSignUpData } = require('../utils/validator');
+
 
 
 authRouter.post("/signup", async (req,res) => {
     try {
 
-        validateSignUpData(req);
 
         const { Name, emailID, password } = req.body;
         const passwordHash = await bcrypt.hash(password, 10);
@@ -54,6 +53,14 @@ authRouter.post("/login", async (req,res) => {
     }
 });
 
+
+authRouter.post("/logout", async (req,res) => {
+        res.cookie("token", null, {
+            expires: new Date(Date.now()),
+        });
+        res.send("Logout Successful!");
+    
+})
 
 
 module.exports = authRouter;
