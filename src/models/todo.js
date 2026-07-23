@@ -14,14 +14,16 @@ const todoSchema = mongoose.Schema({
         enum: {
             values: ["Low", "Medium", "High"],
             message: `{VALUE} is not a valid priority.`
-        }
+        },
+        default: "Medium",
     },
     status: {
         type: String,
         enum: {
             values: ["Pending", "In-Progress", "Completed"],
             message: `{VALUE} is not a valid status.`
-        }
+        },
+        default: "Pending",
     },
     dueDate: {
         type: Date,
