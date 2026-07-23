@@ -36,7 +36,7 @@ authRouter.post("/login", async (req,res) => {
 
         if(isPasswordValid) {
             const token = await jwt.sign({ _id: user._id }, "To-Do@989", { expiresIn: "7d" });
-            res.cookie("token", token, { expires: new Date(Date.now()) + 24*60*60*1000*7 });
+            res.cookie("token", token, { expires: new Date(Date.now() + 7*24*60*60*1000) });
             res.send("Login Successfull!");
         }
         else {
