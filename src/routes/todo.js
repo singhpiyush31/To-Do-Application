@@ -20,6 +20,16 @@ todoRouter.post("/create", userAuth, async (req,res) => {
     } catch (err) {
         res.status(500).json({ error: err.message, message: "Internal Server Error" });
     }
-})
+});
+
+todoRouter.get("/:userList", async (req,res) => {
+    try {
+        const todoList = await Todo.find({ user: req.params.userList });
+        res.json({ message: "Your To-Do List", todoList });
+        await todoList.save();
+    } catch (err) {
+        res.status(500).json({ error: err.message, message: "Internal Server Error" });
+    }
+});
 
 module.exports = todoRouter;
