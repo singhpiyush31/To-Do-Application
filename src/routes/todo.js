@@ -22,11 +22,10 @@ todoRouter.post("/create", userAuth, async (req,res) => {
     }
 });
 
-todoRouter.get("/:userList", async (req,res) => {
+todoRouter.get("/", userAuth, async (req,res) => {
     try {
-        const todoList = await Todo.find({ user: req.params.userList });
+        const todoList = await Todo.findOne({ user: req.user });
         res.json({ message: "Your To-Do List", todoList });
-        await todoList.save();
     } catch (err) {
         res.status(500).json({ error: err.message, message: "Internal Server Error" });
     }
@@ -46,6 +45,15 @@ todoRouter.patch("/edit/:Id", async (req,res) => {
         const todoEdit = await Todo.findByIdAndUpdate(req.params.Id, req.body);
         await todoEdit.save();
         res.status(200).json({message: "Updated To-Do List", todoEdit });
+    } catch (err) {
+        res.status(500).json({ error: err.message, message: "Internal Server Error" });
+    }
+});
+
+todoRouter.delete("/delete/:Id", async (req,res) => {
+    try {
+        const todoDeleteId = await Todo.findByIdAndDelete(req.params.Id);
+        res.status(200).json({ message: "Your To-Do List Deleted Successfully!" });
     } catch (err) {
         res.status(500).json({ error: err.message, message: "Internal Server Error" });
     }
