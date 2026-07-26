@@ -39,6 +39,16 @@ todoRouter.get("/get/:Id", async (req,res) => {
     } catch (err) {
         res.status(500).json({ error: err.message, message: "Internal Server Error" });
     }
-})
+});
+
+todoRouter.patch("/edit/:Id", async (req,res) => {
+    try {
+        const todoEdit = await Todo.findByIdAndUpdate(req.params.Id, req.body);
+        await todoEdit.save();
+        res.status(200).json({message: "Updated To-Do List", todoEdit });
+    } catch (err) {
+        res.status(500).json({ error: err.message, message: "Internal Server Error" });
+    }
+});
 
 module.exports = todoRouter;
