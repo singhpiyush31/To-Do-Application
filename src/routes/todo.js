@@ -34,7 +34,7 @@ todoRouter.get("/", userAuth, async (req,res) => {
 todoRouter.get("/get/:Id", async (req,res) => {
     try {
         const todoId = await Todo.findById(req.params.Id);
-        res.json({ message: "Your To-Do", todoId });
+        res.status(200).json({ message: "Your To-Do", todoId });
     } catch (err) {
         res.status(500).json({ error: err.message, message: "Internal Server Error" });
     }
